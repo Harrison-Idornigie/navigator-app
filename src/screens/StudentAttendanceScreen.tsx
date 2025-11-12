@@ -11,12 +11,15 @@ import {
     faExclamationTriangle,
     faUser,
     faSchool,
-    faClock
+    faClock,
+    faRoute
 } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from '../contexts/LocationContext';
 import { useFleetbase } from '../contexts/FleetbaseContext';
 import { config, toBoolean } from '../utils/config';
 import useAppTheme from '../hooks/use-app-theme';
+import ETADisplay from '../components/ETADisplay';
+import useETA from '../hooks/use-eta';
 
 const WidgetContainer = ({ children, ...props }) => {
     const { isDarkMode } = useAppTheme();
@@ -346,6 +349,36 @@ const StudentAttendanceScreen = () => {
                             </Button>
                         </XStack>
                     </WidgetContainer>
+
+                    {/* Route ETAs */}
+                    {currentTrip && (
+                        <WidgetContainer>
+                            <Text fontSize='$4' fontWeight='600' color='$textPrimary' marginBottom='$3'>
+                                <FontAwesomeIcon icon={faRoute} size={16} />
+                                <Text marginLeft='$2'>Route ETAs</Text>
+                            </Text>
+                            <ETADisplay 
+                                tripId={currentTrip.uuid}
+                                routeId={currentTrip.route?.uuid}
+                                busId={currentTrip.bus?.uuid}
+                                autoRefresh={true}
+                                refreshInterval={30}
+                                showRefresh={true}
+                                onETAUpdate={(etas) => {
+                                    // Handle ETA updates if needed
+                                    console.log('ETAs updated:', etas);
+                                }}
+                                onStopPress={(stop) => {
+                                    // Show stop details or navigate to stop view
+                                    Alert.alert(
+                                        'Stop Information',
+                                        `${stop.stop_name}\n\nETA: ${stop.eta_minutes ? Math.round(stop.eta_minutes) + ' minutes' : 'Calculating...'}\nDistance: ${stop.distance_km ? stop.distance_km.toFixed(1) + ' km' : 'Unknown'}`,
+                                        [{ text: 'OK' }]
+                                    );
+                                }}
+                            />
+                        </WidgetContainer>
+                    )}
                 </YStack>
             </ScrollView>
         </YStack>
