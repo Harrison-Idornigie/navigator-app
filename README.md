@@ -103,8 +103,10 @@ ENABLE_PARENT_NOTIFICATIONS=true
 ENABLE_SCHOOL_ZONE_ALERTS=true
 ENABLE_PRE_TRIP_INSPECTION=true
 
-# Map & Navigation
-GOOGLE_MAPS_API_KEY=your_google_maps_key
+# Map & Navigation  
+# ETA calculations use FREE OSRM routing service by default (no API key needed)
+# Only add Google Maps API key if you need traffic-aware routing (requires billing setup)
+GOOGLE_MAPS_API_KEY=your_google_maps_key_optional
 ```
 
 ### Running in Simulator

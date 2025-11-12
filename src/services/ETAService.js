@@ -37,7 +37,7 @@ class ETAService {
                 bus_id: busId,
                 destination_lat: destination.lat || destination.latitude,
                 destination_lng: destination.lng || destination.longitude,
-                provider: options.provider || 'google'
+                provider: options.provider || 'osrm' // Free OSRM routing service
             });
 
             return response;
@@ -58,7 +58,7 @@ class ETAService {
         try {
             const response = await this.adapter.get(`/school-transport/tracking/routes/${tripId}/etas`, {
                 params: {
-                    provider: options.provider || 'google'
+                    provider: options.provider || 'osrm' // Free OSRM routing service
                 }
             });
 
@@ -82,7 +82,7 @@ class ETAService {
                 `/school-transport/tracking/routes/${routeId}/stops/${stopId}/eta`,
                 {
                     params: {
-                        provider: options.provider || 'google'
+                        provider: options.provider || 'osrm' // Free OSRM routing service
                     }
                 }
             );
