@@ -2,7 +2,7 @@
   <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/fleetbase-logo-svg.svg" width="380" height="100" />
 </p>
 <p align="center">
-Open source order managemenr, geolocation tracking & navigation app for Fleetbase drivers & agents.
+School Transport Driver App - Open source school bus driver app for route management, student attendance tracking, and real-time location updates.
 </p>
 
 <p align="center">
@@ -36,7 +36,19 @@ Open source order managemenr, geolocation tracking & navigation app for Fleetbas
 
 ### About
 
-Fleetbase Navigator is an open source navigation and order management app for drivers and agents using Fleetbase. This app is fully customizable and supports QR code scanning, digital signatures, photos, and routing and navigation for agents. Drivers will be able to update activity to orders on the run as they complete job. Navigator app now includes fuel report and issue management and creation. Enable seamless communication with built in chat with operations personnel and customers.
+School Transport Driver is an open source school bus driver app built on Fleetbase Navigator. This app is specifically designed for school district transportation with features including:
+
+- **Student Attendance Tracking**: Check students in/out with photo verification
+- **Route Management**: View and navigate optimized school bus routes with multiple stops
+- **Real-time Location Tracking**: Keep parents and administrators informed of bus location
+- **Parent Notifications**: Automated notifications for pickup/dropoff times and delays
+- **School Zone Safety**: Speed limit warnings and route compliance monitoring
+- **Pre-Trip Inspections**: Daily safety checklists before routes begin
+- **Emergency Contacts**: Quick access to school administration and emergency services
+- **Student Roster**: View student information, photos, and special needs
+- **Communication**: Built-in chat with school administrators and parents
+
+This app leverages the FleetOps infrastructure where school buses are modeled as vehicles and trips/routes are represented as orders, providing a robust foundation for school transportation management.
 
 ### Prerequisites
 
@@ -51,12 +63,13 @@ Installation and setup is fairly quick, all you need is your Fleetbase API Key, 
 
 Run the commands below; first clone the project, use npm or yarn to install the dependencies, then run `npx pod-install` to install the iOS dependencies. Lastly, create a `.env` file to configure the app.
 
-```
-git clone git@github.com:fleetbase/navigator-app.git
-cd navigator-app
+```bash
+git clone git@github.com:fleetbase/navigator-app.git navigator-app-school
+cd navigator-app-school
 yarn
 yarn pod:install
-touch .env
+cp .env.school .env
+# Edit .env with your configuration
 ```
 
 ### Configure Environment
@@ -68,17 +81,30 @@ Below is the steps needed to configure the environment. The first part covers co
 3.  Once you're in the Fleetbase console select the "Developers" button in the top navigation. Next, select API Keys from the menu in the Developers section, and create a new API key. Copy your secret key generated, you'll need it later.
 4.  Once you have both required API keys open your `.env` file.
 
-In your `.env` file supply your Fleetbase API secret key, and additionally you will need a Google Maps API Key. Lastly, you'll also need to supply your app/bundle identifier, and an `APP_NAME` key.
+In your `.env` file supply your Fleetbase API secret key, school district information, and feature flags. You'll also need a Google Maps API Key for navigation.
 
 Your `.env` file should look something like this once you're done.
 
-```
+```bash
 # .env
-APP_NAME=Fleetbase Navigator
-APP_IDENTIFIER=io.fleetbase.navigator
-APP_LINK_PREFIX=navigator://
+APP_NAME=School Transport Driver
+APP_IDENTIFIER=io.fleetbase.schooltransport.driver
+APP_LINK_PREFIX=schooldriver://
 FLEETBASE_HOST=https://api.fleetbase.io
-FLEETBASE_KEY=
+FLEETBASE_KEY=your_api_key_here
+
+# School Transport Specific
+SCHOOL_DISTRICT_NAME=Your District Name
+SCHOOL_DISTRICT_ID=your_district_id
+
+# Feature Flags
+ENABLE_STUDENT_ATTENDANCE=true
+ENABLE_PARENT_NOTIFICATIONS=true
+ENABLE_SCHOOL_ZONE_ALERTS=true
+ENABLE_PRE_TRIP_INSPECTION=true
+
+# Map & Navigation
+GOOGLE_MAPS_API_KEY=your_google_maps_key
 ```
 
 ### Running in Simulator
