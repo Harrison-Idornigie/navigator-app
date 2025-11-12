@@ -16,6 +16,9 @@ import {
     faTriangleExclamation,
     faFlag,
     faTimes,
+    faUsers,
+    faClipboardCheck,
+    faPhone
 } from '@fortawesome/free-solid-svg-icons';
 import { useTheme, Text, View, XStack, Image } from 'tamagui';
 import { navigatorConfig, get, config, toArray, getTheme } from '../utils';
@@ -42,6 +45,11 @@ import ChatParticipantsScreen from '../screens/ChatParticipantsScreen';
 import CreateChatChannelScreen from '../screens/CreateChatChannelScreen';
 import DriverProfileScreen from '../screens/DriverProfileScreen';
 import DriverAccountScreen from '../screens/DriverAccountScreen';
+// School Transport specific screens
+import StudentAttendanceScreen from '../screens/StudentAttendanceScreen';
+import PreTripInspectionScreen from '../screens/PreTripInspectionScreen';
+import EmergencyContactScreen from '../screens/EmergencyContactScreen';
+import SchoolZoneSafetyAlerts from '../components/SchoolZoneSafetyAlerts';
 import { useOrderManager } from '../contexts/OrderManagerContext';
 import { useChat } from '../contexts/ChatContext';
 import useAppTheme from '../hooks/use-app-theme';
@@ -64,6 +72,9 @@ const importedIconsMap = {
     faUser,
     faTriangleExclamation,
     faFlag,
+    faUsers,
+    faClipboardCheck,
+    faPhone
 };
 
 function getTabConfig(name, key, defaultValue = null) {
@@ -77,7 +88,7 @@ function getTabConfig(name, key, defaultValue = null) {
 }
 
 function createTabScreens() {
-    const tabs = toArray(navigatorConfig('driverNavigator.tabs', 'DriverDashboardTab,DriverTaskTab,DriverReportTab,DriverChatTab,DriverAccountTab'));
+    const tabs = toArray(navigatorConfig('driverNavigator.tabs', 'DriverDashboardTab,DriverTaskTab,StudentAttendanceTab,DriverReportTab,DriverChatTab,DriverAccountTab'));
     const screens = {
         DriverDashboardTab: {
             screen: DriverDashboardTab,
@@ -97,6 +108,14 @@ function createTabScreens() {
                         marginRight: -5,
                         opacity: allActiveOrders.length ? 1 : 0.5,
                     },
+                };
+            },
+        },
+        StudentAttendanceTab: {
+            screen: StudentAttendanceTab,
+            options: () => {
+                return {
+                    tabBarLabel: config('STUDENT_ATTENDANCE_TAB_LABEL', 'Students'),
                 };
             },
         },
@@ -159,6 +178,9 @@ function getDefaultTabIcon(routeName) {
         case 'DriverTaskTab':
             icon = faClipboardList;
             break;
+        case 'StudentAttendanceTab':
+            icon = faUsers;
+            break;
         case 'DriverReportTab':
             icon = faFlag;
             break;
@@ -199,7 +221,11 @@ const DriverDashboardTab = createNativeStackNavigator({
     initialRouteName: 'DriverDashboard',
     screens: {
         DriverDashboard: {
-            screen: DriverDashboardScreen,
+            screen: () => (
+                <SchoolZoneSafetyAlerts>
+                    <DriverDashboardScreen />
+                </SchoolZoneSafetyAlerts>
+            ),
             options: ({ route, navigation }) => {
                 return {
                     headerShown: false,
@@ -490,6 +516,63 @@ const DriverAccountTab = createNativeStackNavigator({
                     headerLeft: () => {
                         return <BackButton onPress={() => navigation.goBack()} />;
                     },
+                };
+            },
+        },
+    },
+});
+
+const StudentAttendanceTab = createNativeStackNavigator({
+    initialRouteName: 'StudentAttendance',
+    screens: {
+        StudentAttendance: {
+            screen: StudentAttendanceScreen,
+            options: ({ route, navigation }) => {
+                return {
+                    title: 'Student Attendance',
+                    headerTransparent: true,
+                    headerShadowVisible: false,
+                    headerLeft: () => (
+                        <XStack alignItems='center' space='$2'>
+                            <Text color='$textPrimary' fontSize={20} fontWeight='bold'>
+                                Students
+                            </Text>
+                        </XStack>
+                    ),
+                    headerRight: () => (
+                        <HeaderButton 
+                            icon={faPhone} 
+                            onPress={() => navigation.navigate('EmergencyContact')} 
+                        />
+                    ),
+                };
+            },
+        },
+        PreTripInspection: {
+            screen: PreTripInspectionScreen,
+            options: ({ route, navigation }) => {
+                return {
+                    title: 'Pre-Trip Inspection',
+                    headerTransparent: true,
+                    headerShadowVisible: false,
+                    headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+                    headerRight: () => (
+                        <HeaderButton 
+                            icon={faClipboardCheck} 
+                            onPress={() => {/* Optional: Quick action */}} 
+                        />
+                    ),
+                };
+            },
+        },
+        EmergencyContact: {
+            screen: EmergencyContactScreen,
+            options: ({ route, navigation }) => {
+                return {
+                    title: 'Emergency Contacts',
+                    headerTransparent: true,
+                    headerShadowVisible: false,
+                    headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
                 };
             },
         },
